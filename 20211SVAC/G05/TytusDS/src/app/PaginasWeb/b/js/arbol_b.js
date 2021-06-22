@@ -117,6 +117,17 @@ class ArbolB{
         console.log("l")
         this.raiz = this.valueagregar(valor,this.raiz)
     }
+    leer(){
+        let ldatos=[];
+        let aux = this.uno;
+        if (this.uno!=null){
+            do{
+                ldatos.push(aux.dato.toString());
+                aux=aux.post;
+                }while(aux!=null);}
+        return ldatos;
+      }
+  
 
     valueagregar(valor,temp){
         
@@ -307,17 +318,7 @@ class ArbolB{
         }
     }
 
-    leer(){
-        let ldatos=[];
-        let aux = this.uno;
-        if (this.uno!=null){
-            do{
-                ldatos.push(aux.dato.toString());
-                aux=aux.post;
-                }while(aux!=null);}
-        return ldatos;
-      }
-  
+    
 
  
 
