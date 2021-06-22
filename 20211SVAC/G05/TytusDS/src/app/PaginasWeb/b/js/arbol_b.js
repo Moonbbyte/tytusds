@@ -1,13 +1,60 @@
+class lista{
+    constructor(){
+        this.uno=null;
+        this.fin=null;
+        
+    }
+
+    guardar(valor){
+        let nodo = new nodolista(valor)
+        let aux1;
+        let aux2;
+
+        if(this.uno==null){
+           this.uno=nodo;
+            nodo.post=null;
+            this.fin=nodo;
+        }else{ aux1=this.uno;
+            while(aux1!=null){
+                aux2=aux1.post;
+                if(nodo.dato<aux1.dato){
+                    nodo.post=this.uno;
+                    this.uno=nodo;
+                    this.fin=this.uno;
+                    break;}
+                else{
+                    if(nodo.dato>=aux1.dato && aux2==null){
+                        aux1.post=nodo;
+                        nodo.post=null;
+                        this.fin=nodo;
+                        break;
+                    }else{  if(aux1.dato<=nodo.dato && aux2.dato>nodo.dato){
+                        aux1.post=nodo;
+                        nodo.post=aux2;
+                        break;
+                        }else{aux1=aux1.post;}
+                        }}
+                    
+                    }
+    }
+    
+    }
+
+}
+
 
 
 class Nodo{
     constructor(padre, id){
-        this.id = id
-        this.claves = []
-
+        
         this.hijos = []
-
-        this.padre = padre}
+        this.id = id
+        this.padre = padre
+        this.uno=null;
+        this.claves = []
+        this.fin=null;
+    }
+        
     
     agregar(valor){
         this.claves.push(valor)
@@ -33,38 +80,46 @@ class Nodo{
 
 }
 
+var arrayNodes = []
+var edges = []
+
 var contador = 1
 
-var arrayNodes = []
 
-var edges = []
 
 var arbol=null;
 
+
+class nodolista{
+    constructor(valor){
+        this.dato=valor;
+        this.post=null;
+        this.ant=null
+    }
+}
 
 
 
 class ArbolB{
 
-    constructor(grado){
-
+    constructor(grado,medio){
+        this.claves = []
         this.repetidos = false
+        this.uno=null;
+        this.fin=null;
 
-        this.grado = grado
-        if(this.g(grado)){
-            this.enmedio = grado/2
-        }else{
-            this.enmedio = (grado-1)/2
-        }
+        this.grado = grado;
+        this.enmedio = medio;
         this.raiz = new Nodo(null, 0)
     }
 
-
     agregar(valor){
-        this.raiz = this.valueagregar(valor, this.raiz)
+        console.log("l")
+        this.raiz = this.valueagregar(valor,this.raiz)
     }
 
-    valueagregar(valor, temp){
+    valueagregar(valor,temp){
+        
         if(temp.hijos.length == 0){
             temp.agregar(valor)
         }else{
@@ -154,7 +209,59 @@ class ArbolB{
         return temp
     }
 
-    arbolgra(temp){
+    guardar(valor){
+        let nodo = new nodolista(valor)
+        let aux1;
+        let aux2;
+
+        if(this.uno==null){
+           this.uno=nodo;
+            nodo.post=null;
+            this.fin=nodo;
+        }else{ aux1=this.uno;
+            while(aux1!=null){
+                aux2=aux1.post;
+                if(nodo.dato<aux1.dato){
+                    nodo.post=this.uno;
+                    this.uno=nodo;
+                    this.fin=this.uno;
+                    break;}
+                else{
+                    if(nodo.dato>=aux1.dato && aux2==null){
+                        aux1.post=nodo;
+                        nodo.post=null;
+                        this.fin=nodo;
+                        break;
+                    }else{  if(aux1.dato<=nodo.dato && aux2.dato>nodo.dato){
+                        aux1.post=nodo;
+                        nodo.post=aux2;
+                        break;
+                        }else{aux1=aux1.post;}
+                        }}
+                    
+                    }
+    }
+    
+    }
+    
+    insertarNodo(valor,grado){
+        this.guardar(valor)
+        var medio;
+        if(arbol == null){
+            if (grado%2==0) {medio = grado/2}
+            else{
+                medio = (grado-1)/2
+            }
+            arbol = new ArbolB(grado,medio)
+        }
+        arbol.agregar(valor)
+    }
+
+    as(){
+        arrayNodes = []
+        edges = []  
+        let ldata=[];
+        let temp=arbol.raiz;
         if(temp != null){
             var texto = ""
             var i
@@ -170,40 +277,49 @@ class ArbolB{
             texto = ""
             for(i = 0; i<temp.hijos.length; i++){
                 edges.push({from: temp.id, to: temp.hijos[i].id})
-                this.arbolgra(temp.hijos[i])
+                this.a(temp.hijos[i])
             }
         }
-    }
-
-    
-     crearArbol(grado){
-        if(arbol == null){
-            arbol = new ArbolB(grado)
-        }
-         
-    }
-    
-    insertarNodo(valor){
-        arbol.agregar(valor)
-    }
-
-    as(){
-        arrayNodes = []
-        edges = []  
-        let ldata=[];
-        arbol.arbolgra(arbol.raiz);
         ldata.push(arrayNodes);
         ldata.push(edges);
         return ldata;
         
     }
 
+    a(temp){
+        if(temp != null){
+            var texto = ""
+            var i
+            for(i = 0; i<temp.claves.length; i++){
+                if(i == temp.claves.length-1){
+                    texto = texto + temp.claves[i].toString();
+                }else{
+                    texto = texto + temp.claves[i].toString() + "|"
+                }
+                console.log(texto);
+            }
+            arrayNodes.push({id: temp.id, label: texto})
+            texto = ""
+            for(i = 0; i<temp.hijos.length; i++){
+                edges.push({from: temp.id, to: temp.hijos[i].id})
+                this.a(temp.hijos[i])
+            }
+        }
+    }
+
+    leer(){
+        let ldatos=[];
+        let aux = this.uno;
+        if (this.uno!=null){
+            do{
+                ldatos.push(aux.dato.toString());
+                aux=aux.post;
+                }while(aux!=null);}
+        return ldatos;
+      }
   
 
-    g(valor){
-        if (valor%2==0) {return true;}
-        return false;
- }
+ 
 
 }
 
